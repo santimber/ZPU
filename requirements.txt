@@ -1,4 +1,4 @@
 langchain
 streamlit
 streamlit_chat
-pinecone
+pinecone-client
