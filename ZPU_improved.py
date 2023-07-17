@@ -14,7 +14,6 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
 import tiktoken
-from dotenv import load_dotenv
 import pprint
 
 from langchain.chat_models import ChatOpenAI
