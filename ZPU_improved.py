@@ -39,7 +39,7 @@ os.environ['PINECONE_API_KEY'] = st.secrets['PINECONE_API_KEY']
 os.environ['PINECONE_API_ENV'] = st.secrets['PINECONE_API_ENV']
 
 # Building the chatbot
-llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo-0613')
+llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
 
 st.subheader("PaCa Chatbot with memory")
 
