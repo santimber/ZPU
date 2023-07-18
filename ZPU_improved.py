@@ -56,8 +56,8 @@ vectorstore = pinecone.Index(index_name)
 
 # Search for similar products
 
-def get_similiar_docs(query, k=3, score=False):
-    similar_docs = vectorstore.query(query, top_k=4, includeMetadata=True)
+def get_similiar_docs(query):
+    similar_docs = vectorstore.query(query, top_k=4)
     return similar_docs
 
 
