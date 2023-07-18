@@ -79,7 +79,7 @@ pinecone.init(
     st.write("environment:", st.secrets["PINECONE_API_ENV"])
 )
 index_name = "zpu-bot"
-vectorstore = pinecone.Index("zpu-bo")
+vectorstore = pinecone.Index("zpu-bot")
 
 # Search for similar products
 
