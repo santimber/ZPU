@@ -48,7 +48,7 @@ st.set_page_config(page_title="PaCa chatbot Demo", page_icon=":robot:")
 os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
 os.environ['PINECONE_API_KEY'] = st.secrets['PINECONE_API_KEY']
 os.environ['PINECONE_API_ENV'] = st.secrets['PINECONE_API_ENV']
-pinecone.init(api_key='', environment='us-west4-gcp')
+pinecone.init(api_key= PINECONE_API_KEY, environment='us-west4-gcp')
 
 index_name = "zpu-bot"
 vectorstore = pinecone.Index(index_name)
