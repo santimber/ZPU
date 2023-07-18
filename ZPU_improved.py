@@ -43,7 +43,7 @@ import pinecone
 
 
 # load document
-directory = '/Users/Boo/Coding/AI/Langchain/ZPU/platform _rules.pdf'
+directory = 'platform _rules.pdf'
 
 def load_doc(directory):
     loader = PyPDFLoader(directory)
