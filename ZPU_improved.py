@@ -38,20 +38,6 @@ os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
 os.environ['PINECONE_API_KEY'] = st.secrets['PINECONE_API_KEY']
 os.environ['PINECONE_API_ENV'] = st.secrets['PINECONE_API_ENV']
 
-# Building the chatbot
-llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
-
-st.subheader("PaCa Chatbot with memory")
-
-if 'responses' not in st.session_state:
-    st.session_state['responses'] = ["How can I assist you?"]
-
-if 'requests' not in st.session_state:
-    st.session_state['requests'] = []
-
-if 'buffer_memory' not in st.session_state:
-    st.session_state.buffer_memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=650,
-                                                                     return_messages=True)
 # prompting
 template = """
 You are an exceptional partner support chatbot that politely and consisely answers questions.
@@ -79,7 +65,8 @@ prompt_template = ChatPromptTemplate.from_messages(
 # Setting the LLM and Chain
 def load_chain():
     llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-    chain =  ConversationChain(memory=st.session_state.buffer_memory, prompt=prompt_template, llm=llm, verbose=True)
+    chain =  ConversationChain(memory=ConversationSummaryBufferMemory(llm=llm, max_token_limit=650,
+                                                                     return_messages=True), prompt=prompt_template, llm=llm, verbose=True)
     return chain
 
 # setting up streamlit
@@ -93,11 +80,9 @@ if "generated" not in st.session_state:
 if "past" not in st.session_state:
     st.session_state["past"] = []
 
-
 def get_text():
     input_text = st.text_input("You: ", "Hello, how are you?", key="input")
     return input_text
-
 
 user_input = get_text()
 
