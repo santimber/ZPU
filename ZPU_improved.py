@@ -65,7 +65,7 @@ prompt_template = ChatPromptTemplate.from_messages(
 # Setting the LLM and Chain
 def load_chain():
     llm = ChatOpenAI(model_name="gpt-3.5-turbo-0613", temperature=0)
-    memory = ConversationBufferMemory(memory_key="chat_history", input_key="human_input")
+    memory = ConversationBufferMemory(memory_key="past", input_key="user_input")
     chain =  load_qa_chain(chain_type="stuff", memory=memory, prompt=prompt_template, llm=llm, verbose=True)
     return chain
 
