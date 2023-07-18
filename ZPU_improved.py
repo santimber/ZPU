@@ -49,12 +49,12 @@ pinecone.init(
     st.write("environment:", st.secrets["PINECONE_API_ENV"])
 )
 index_name = "zpu-bot"
-vectorstore = pinecone.Index("zpu-bot")
+vectorstore = pinecone.Index(index_name)
 
 # Search for similar products
 
 def get_similiar_docs(query, k=3, score=False):
-    similar_docs = vectorstore.similarity_search(query, k=k)
+    similar_docs = vectorstore.query(query, k=k)
     return similar_docs
 
 
