@@ -75,7 +75,7 @@ print(f'Now you have {len(texts)} documents')
 embeddings = OpenAIEmbeddings()
 
 pinecone.init(
-    st.write("api_key:", st.secrets["PINECONE_API_KEY"])
+    st.write("api_key:", st.secrets["PINECONE_API_KEY"]),
     st.write("environment:", st.secrets["PINECONE_API_ENV"])
 )
 index_name = "zpu-bot"
