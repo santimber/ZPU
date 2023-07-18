@@ -64,8 +64,8 @@ prompt_template = ChatPromptTemplate.from_messages(
 
 # Setting the LLM and Chain
 def load_chain():
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-    chain =  ConversationChain(memory=ConversationSummaryBufferMemory(llm=llm, max_token_limit=650,
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo-0613", temperature=0)
+    chain =  load_qa_chain(llm, chain_type="stuff", memory=ConversationSummaryBufferMemory(llm=llm, max_token_limit=650,
                                                                      return_messages=True), prompt=prompt_template, llm=llm, verbose=True)
     return chain
 
@@ -89,8 +89,8 @@ def get_text():
 user_input = get_text()
 
 if user_input:
-    output = chain.run(input=user_input)
-
+    query = docsearch.similarity_search(user_input)
+    output= chain.run(input_documents=docs, question=query)
     st.session_state.past.append(user_input)
     st.session_state.generated.append(output)
 
