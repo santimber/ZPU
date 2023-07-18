@@ -69,6 +69,8 @@ def load_chain():
                                                                      return_messages=True), prompt=prompt_template, llm=llm, verbose=True)
     return chain
 
+chain = load_chain()
+
 # setting up streamlit
 
 st.set_page_config(page_title="PaCa chatbot Demo", page_icon=":robot:")
