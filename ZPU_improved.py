@@ -74,7 +74,7 @@ chain = load_chain()
 # setting up streamlit
 
 st.set_page_config(page_title="PaCa chatbot Demo", page_icon=":robot:")
-st.header("PaCA Platform rules Bot", page_icon=":robot:")
+st.header("PaCA Platform rules Bot")
 
 if "generated" not in st.session_state:
     st.session_state["generated"] = []
