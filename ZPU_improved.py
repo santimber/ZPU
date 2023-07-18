@@ -60,13 +60,12 @@ human_message_prompt = HumanMessagePromptTemplate.from_template(
     human_template)
 
 prompt_template = ChatPromptTemplate.from_messages(
-    [system_message_prompt, MessagesPlaceholder(variable_name="history"), human_message_prompt])
+    [system_message_prompt, MessagesPlaceholder(variable_name="past"), human_message_prompt])
 
 # Setting the LLM and Chain
 def load_chain():
     llm = ChatOpenAI(model_name="gpt-3.5-turbo-0613", temperature=0)
-    memory = ConversationBufferMemory(memory_key="past", input_key="user_input")
-    chain =  load_qa_chain(chain_type="stuff", memory=memory, prompt=prompt_template, llm=llm, verbose=True)
+    chain =  load_qa_chain(chain_type="stuff", memory=st.session_state.buffer_memory, prompt=prompt_template, llm=llm, verbose=True)
     return chain
 
 chain = load_chain()
@@ -81,6 +80,9 @@ if "generated" not in st.session_state:
 
 if "past" not in st.session_state:
     st.session_state["past"] = []
+    
+if 'buffer_memory' not in st.session_state:
+            st.session_state.buffer_memory=ConversationBufferWindowMemory(k=3,return_messages=True)
 
 def get_text():
     input_text = st.text_input("You: ", "Hello, I have some questions about the platform rules", key="input")
