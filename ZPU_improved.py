@@ -44,36 +44,6 @@ import pinecone
 st.set_page_config(page_title="PaCa chatbot Demo", page_icon=":robot:")
 
 # load document
-directory = 'platform _rules.pdf'
-
-def load_doc(directory):
-    loader = PyPDFLoader(directory)
-    data = loader.load()
-    return data
-
-
-data = load_doc(directory)
-total_character_count = 0
-for document in data:
-    total_character_count += len(document.page_content)
-
-print(f'There are {total_character_count} characters in your document')
-
-# Chunk your data up into smaller documents
-
-def split_docs(data, chunk_size=800, chunk_overlap=50):
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-    text = text_splitter.split_documents(data)
-    return text
-
-
-texts = split_docs(data)
-print(f'Now you have {len(texts)} documents')
-
-# Create embeddings
-embeddings = OpenAIEmbeddings()
-
 pinecone.init(
     st.write("api_key:", st.secrets["PINECONE_API_KEY"]),
     st.write("environment:", st.secrets["PINECONE_API_ENV"])
