@@ -5,3 +5,4 @@ pinecone-client
 tiktoken
 utils
 openai
+pypdf
