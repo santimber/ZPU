@@ -60,7 +60,19 @@ human_message_prompt = HumanMessagePromptTemplate.from_template(
     human_template)
 
 prompt_template = ChatPromptTemplate.from_messages(
-    [system_message_prompt, MessagesPlaceholder(variable_name="past"), human_message_prompt])
+    [system_message_prompt, human_message_prompt])
+
+# setting up a chain
+def load_chain():
+    llm = OpenAI(temperature=0)
+    memory = ConversationBufferMemory(memory_key="chat_history", input_key="human_input")
+    prompt = prompt_template
+    chain = load_qa_chain(llm, chain_type="stuff", memory=memory, prompt=prompt)
+    return chain
+
+chain = load_chain()
+
+
 
 # setting up streamlit
 
@@ -72,26 +84,16 @@ if "generated" not in st.session_state:
 
 if "past" not in st.session_state:
     st.session_state["past"] = []
-    
-if 'buffer_memory' not in st.session_state:
-            st.session_state.buffer_memory=ConversationBufferWindowMemory(k=3,return_messages=True)
 
 def get_text():
-    input_text = st.text_input("You: ", "Hello, I have some questions about the platform rules", key="input")
+    input_text = st.text_input("You: ", "Hello, how are you?", key="input")
     return input_text
-
-def load_chain():
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo-0613", temperature=0)
-    chain =  load_qa_chain(chain_type="stuff", memory=st.session_state.buffer_memory, prompt=prompt_template, llm=llm, verbose=True)
-    return chain
-
-chain = load_chain()
 
 user_input = get_text()
 
 if user_input:
-    query = docsearch.similarity_search(user_input)
-    output= chain.run(input_documents=docs, question=query)
+    docs = docsearch.similarity_search(user_input)
+    output = chain.run(input_documents=docs, question=user_input)
     st.session_state.past.append(user_input)
     st.session_state.generated.append(output)
 
