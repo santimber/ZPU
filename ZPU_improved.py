@@ -41,6 +41,7 @@ from langchain.vectorstores import Chroma, Pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 import pinecone
 
+st.set_page_config(page_title="PaCa chatbot Demo", page_icon=":robot:")
 
 # load document
 directory = 'platform _rules.pdf'
@@ -59,7 +60,6 @@ for document in data:
 print(f'There are {total_character_count} characters in your document')
 
 # Chunk your data up into smaller documents
-
 
 def split_docs(data, chunk_size=800, chunk_overlap=50):
     text_splitter = RecursiveCharacterTextSplitter(
@@ -131,7 +131,6 @@ chain = load_chain()
 
 # setting up streamlit
 
-st.set_page_config(page_title="PaCa chatbot Demo", page_icon=":robot:")
 st.header("PaCA Platform rules Bot")
 
 if "generated" not in st.session_state:
