@@ -47,7 +47,7 @@ You know the following context information.
 Answer to the following question from a partner. Use only information from the previous context information.
 
 If the answer is not contained within the text below, say 'I don't know
-
+{context}
 Question: 
 
 Answer:"""
@@ -65,14 +65,11 @@ prompt_template = ChatPromptTemplate.from_messages(
 # setting up a chain
 def load_chain():
     llm = OpenAI(temperature=0)
-    memory = ConversationBufferMemory(memory_key="chat_history", input_key="human_input")
     prompt = prompt_template
-    chain = load_qa_chain(llm, chain_type="stuff", memory=memory, prompt=prompt)
+    chain = load_qa_chain(llm, chain_type="stuff", prompt=prompt)
     return chain
 
 chain = load_chain()
-
-
 
 # setting up streamlit
 
