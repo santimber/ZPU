@@ -76,54 +76,39 @@ human_message_prompt = HumanMessagePromptTemplate.from_template(
 prompt_template = ChatPromptTemplate.from_messages(
     [system_message_prompt, MessagesPlaceholder(variable_name="history"), human_message_prompt])
 
-# Creating user interface
-st.title("PaCa Chatbot")
-...
-response_container = st.container()
-textcontainer = st.container()
-...
-with textcontainer:
-    query = st.text_input("Query: ", key="input")
-    ...
-with response_container:
-    if st.session_state['responses']:
-        for i in range(len(st.session_state['responses'])):
-            message(st.session_state['responses'][i], key=str(i))
-            if i < len(st.session_state['requests']):
-                message(st.session_state["requests"][i],
-                        is_user=True, key=str(i) + '_user')
-
-
 # Setting the LLM and Chain
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key="")
+def load_chain():
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    chain =  ConversationChain(memory=st.session_state.buffer_memory, prompt=prompt_template, llm=llm, verbose=True)
+    return chain
 
-conversation = ConversationChain(
-    memory=st.session_state.buffer_memory, prompt=prompt_template, llm=llm, verbose=True)
+# setting up streamlit
 
+st.set_page_config(page_title="PaCa chatbot Demo", page_icon=":robot:")
+st.header("LangChain Demo")
 
-def query_refiner(conversation, query):
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=f"Given the following user query and conversation log, formulate a question that would be the most relevant to provide the user with an answer from a knowledge base.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\nRefined Query:",
-        temperature=0.7,
-        max_tokens=256,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
-    return response['choices'][0]['text']
+if "generated" not in st.session_state:
+    st.session_state["generated"] = []
+
+if "past" not in st.session_state:
+    st.session_state["past"] = []
 
 
-def find_match(input):
-    input_em = model.encode(input).tolist()
-    result = index.query(input_em, top_k=2, includeMetadata=True)
-    return result['matches'][0]['metadata']['text']+"\n"+result['matches'][1]['metadata']['text']
+def get_text():
+    input_text = st.text_input("You: ", "Hello, how are you?", key="input")
+    return input_text
 
 
-def get_conversation_string():
-    conversation_string = ""
-    for i in range(len(st.session_state['responses'])-1):
-        conversation_string += "Human: "+st.session_state['requests'][i] + "\n"
-        conversation_string += "Bot: " + \
-            st.session_state['responses'][i+1] + "\n"
-    return conversation_string
+user_input = get_text()
+
+if user_input:
+    output = chain.run(input=user_input)
+
+    st.session_state.past.append(user_input)
+    st.session_state.generated.append(output)
+
+if st.session_state["generated"]:
+
+    for i in range(len(st.session_state["generated"]) - 1, -1, -1):
+        message(st.session_state["generated"][i], key=str(i))
+        message(st.session_state["past"][i], is_user=True, key=str(i) + "_user")
