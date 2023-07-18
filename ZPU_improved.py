@@ -62,14 +62,6 @@ human_message_prompt = HumanMessagePromptTemplate.from_template(
 prompt_template = ChatPromptTemplate.from_messages(
     [system_message_prompt, MessagesPlaceholder(variable_name="past"), human_message_prompt])
 
-# Setting the LLM and Chain
-def load_chain():
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo-0613", temperature=0)
-    chain =  load_qa_chain(chain_type="stuff", memory=st.session_state.buffer_memory, prompt=prompt_template, llm=llm, verbose=True)
-    return chain
-
-chain = load_chain()
-
 # setting up streamlit
 
 st.set_page_config(page_title="PaCa chatbot Demo", page_icon=":robot:")
@@ -87,6 +79,13 @@ if 'buffer_memory' not in st.session_state:
 def get_text():
     input_text = st.text_input("You: ", "Hello, I have some questions about the platform rules", key="input")
     return input_text
+
+def load_chain():
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo-0613", temperature=0)
+    chain =  load_qa_chain(chain_type="stuff", memory=st.session_state.buffer_memory, prompt=prompt_template, llm=llm, verbose=True)
+    return chain
+
+chain = load_chain()
 
 user_input = get_text()
 
