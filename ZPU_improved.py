@@ -18,7 +18,7 @@ import pprint
 
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
-from langchain.chains.conversation.memory import ConversationBufferWindowMemory, ConversationSummaryBufferMemory
+from langchain.chains.conversation.memory import ConversationBufferWindowMemory, ConversationSummaryBufferMemory, ConversationBufferMemory
 
 from langchain.prompts import (
     SystemMessagePromptTemplate,
@@ -65,8 +65,8 @@ prompt_template = ChatPromptTemplate.from_messages(
 # Setting the LLM and Chain
 def load_chain():
     llm = ChatOpenAI(model_name="gpt-3.5-turbo-0613", temperature=0)
-    chain =  load_qa_chain(llm, chain_type="stuff", memory=ConversationSummaryBufferMemory(llm=llm, max_token_limit=650,
-                                                                     return_messages=True), prompt=prompt_template, llm=llm, verbose=True)
+    memory = ConversationBufferMemory(memory_key="chat_history", input_key="human_input")
+    chain =  load_qa_chain(chain_type="stuff", memory=memory, prompt=prompt_template, llm=llm, verbose=True)
     return chain
 
 chain = load_chain()
